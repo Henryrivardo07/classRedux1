@@ -1,20 +1,30 @@
-// Mengimpor useSelector dari react-redux untuk mengambil state dari Redux store
+import React from 'react';
 import { useSelector } from 'react-redux';
-// Mengimpor RootState untuk mendapatkan tipe state global
 import { RootState } from '@/Redux/store';
-// Mengimpor useAppDispatch, yaitu custom hook untuk dispatch action dengan tipe yang sesuai
 import { useAppDispatch } from '@/Redux/hooks';
-// Mengimpor action removeFromCart untuk menghapus item dari keranjang
 import { removeFromCart } from '@/Redux/cartSlice';
-// Mengimpor module SCSS untuk styling komponen
+import { useToast } from '@/Context/ToastContext'; // Mengimpor hook useToast untuk menampilkan toast
 import styles from './Styles/Cart.module.scss';
 
-// Komponen Cart untuk menampilkan daftar produk yang ada di keranjang belanja
-const Cart = () => {
+const Cart: React.FC = () => {
   // Mengambil data cartItems dari Redux store
   const cartItems = useSelector((state: RootState) => state.cart.cartItems);
   // Mendapatkan fungsi dispatch dari custom hook
   const dispatch = useAppDispatch();
+  // Mendapatkan fungsi addToast dari useToast
+  const { addToast } = useToast();
+
+  // Fungsi untuk menangani penghapusan item dari cart
+  const handleRemoveItem = (id: string, title: string) => {
+    // Menghapus item dari cart
+    dispatch(removeFromCart(id));
+    // Menampilkan toast setelah item dihapus
+    addToast({
+      variant: 'success',
+      message: `${title} has been removed from your cart!`,
+      onClose: () => console.log(`${title} toast closed!`), // Menambahkan onClose handler
+    });
+  };
 
   return (
     <div className={styles.container}>
@@ -36,7 +46,7 @@ const Cart = () => {
                 </p>
                 {/* Tombol untuk menghapus item dari keranjang */}
                 <button
-                  onClick={() => dispatch(removeFromCart(item.id))}
+                  onClick={() => handleRemoveItem(item.id, item.title)} // Memanggil handleRemoveItem
                   className={styles.button}
                 >
                   Remove
@@ -51,12 +61,3 @@ const Cart = () => {
 };
 
 export default Cart;
-
-/*
-Penjelasan Singkat:
-Komponen ini mengambil daftar produk dari Redux store (cartItems) dan menampilkannya dalam daftar.
-Jika keranjang kosong, tampilkan teks "Cart is empty".
-Jika ada item, setiap item ditampilkan dengan gambar, nama, harga, dan tombol untuk menghapusnya.
-Saat tombol "Remove" ditekan, fungsi dispatch(removeFromCart(item.id)) akan menghapus produk dari cart.
-
-*/

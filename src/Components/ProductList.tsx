@@ -34,7 +34,7 @@ const ProductList: React.FC = () => {
     // Menampilkan dialog konfirmasi sebelum menambahkan produk ke keranjang
     setDialog({
       variant: 'info', // Jenis dialog, dalam hal ini 'info'
-      title: 'Add to Cart', // Judul dialog
+      title: 'Remove TO Cart', // Judul dialog
       message: `Are you sure you want to add ${product.title} to your cart?`, // Pesan dialog
       primaryButtonTitle: 'Yes, Add', // Teks tombol utama (Yes, Add)
       secondaryButtonTitle: 'Cancel', // Teks tombol sekunder (Cancel)
